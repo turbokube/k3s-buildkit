@@ -1,0 +1,27 @@
+debug = true
+root = "/var/lib/buildkit"
+
+[grpc]
+  address = [ "tcp://0.0.0.0:8547" ]
+  uid = 0
+  gid = 0
+
+[worker.containerd]
+  enabled = true
+  platforms = [ "linux/amd64", "linux/arm64" ]
+  namespace = "k8s.io"
+  address = "/run/k3s/containerd/containerd.sock"
+  snapshotter = "overlayfs"
+
+[worker.containerd.runtime]
+  name = "io.containerd.runc.v2"
+  path = "/bin/containerd-shim-runc-v2"
+
+[worker.oci]
+  enabled = false
+
+[registry."docker.io"]
+  mirrors = ["mirror.gcr.io"]
+
+[registry."registry.k8s.io"]
+  mirrors = ["registry.k8s.io"]
