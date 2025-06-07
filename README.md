@@ -40,3 +40,7 @@ docker exec k3d-${CLUSTER}-server-0 crictl images | grep -E "^(IMAGE|example)"
 ```
 
 Note: Always specify tag when building this way, otherwise containerd might not list your images with name. There's no default `:latest`.
+
+## digests, names and tags
+
+We're yet to find out how images built this way can be referenced by digest.
