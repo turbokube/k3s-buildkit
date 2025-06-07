@@ -62,7 +62,7 @@ UNPACK=false
 # can't use rewrite-timestamp=true because of https://github.com/moby/buildkit/issues/4230
 BUILDKIT_HOST=tcp://0.0.0.0:8547 SOURCE_DATE_EPOCH=0 buildctl build \
   --frontend=dockerfile.v0 --local context=. --local dockerfile=. \
-  --output type=image,name=$IMAGE,push=false,unpack=false,store=true,oci-mediatypes=true \
+  --output type=image,name=$IMAGE,push=false,unpack=$UNPACK,store=true,oci-mediatypes=true,rewrite-timestamp=true \
   --progress=plain \
   --metadata-file /tmp/testbuild.json
 
@@ -91,9 +91,9 @@ echo "=> Digest from running pod: $DIGEST"
 # INVESTIGATING image tagging
 set -x
 # the image name is avaiable here even if addressed by digest only
-docker exec $SERVER ctr containers info $CONTAINER | grep '"Image"
-'
-docker exec $SERVER ctr images inspect example.net/g5y/test-build-in-k3d:$TESTPOD
+docker exec $SERVER ctr containers info $CONTAINER | grep '"Image"'
+
+docker exec $SERVER ctr images inspect --content example.net/g5y/test-build-in-k3d:$TESTPOD
 MANIFEST_DIGEST=$(docker exec $SERVER cat /tmp/testbuild.json | grep '"containerimage.digest":' | cut -d '"' -f4)
 
 # but can we run with that image name?
